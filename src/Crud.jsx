@@ -1,11 +1,8 @@
 import './App.css';
 import supabase from '../utils/supabase';
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, useParams, useNavigate } from 'react-router-dom'; //added for refresh
 
-
-function Create(){}
-function Update(){}
-function Delete(){}
 
 
 function CRUD() { 
@@ -18,6 +15,14 @@ function CRUD() {
         Description: '',
         Reference: ''
     });
+
+    const navigate = useNavigate();
+
+
+    const handleRefresh = () => {
+      navigate('/');
+      window.location.reload();
+    }
 
     useEffect(() => {
         // Fetch all SCP numbers for dropdown
@@ -49,6 +54,7 @@ function CRUD() {
       }
     
       async function handleUpdate(e) { // Handles the update (takes the data in the form and changes the original in the supabase)
+        handleRefresh()
         e.preventDefault();
         const { error } = await supabase
           .from('SCP') // the table name
@@ -56,6 +62,7 @@ function CRUD() {
           .eq('ScpNumber', selectedSCP);
     
         if (!error) alert('SCP updated successfully!');
+        handleRefresh()
       }
 
 
@@ -80,6 +87,7 @@ function CRUD() {
           console.error(error);
           alert('Failed to create SCP.');
         }
+        handleRefresh()
       }
 
       async function handleDelete(e) { // Handles a deleted scp
@@ -92,10 +100,11 @@ function CRUD() {
       
         if (!error) {
           alert('SCP deleted successfully!');
-        } else {
+        } else {  
           console.error('Error deleting SCP:', error);
           alert('Failed to delete SCP.');
         }
+        handleRefresh()
       }
 
     
